@@ -1,3 +1,9 @@
+// Image Imports
+import blueCornerImg from "@/assets/sites/wouter-naert-m6Sfxlts7SI-unsplash.jpg";
+import yongalaImg from "@/assets/sites/neom-yx7TJle8LhM-unsplash.jpg";
+import blueHoleImg from "@/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg";
+import mantaPointImg from "@/assets/sites/sebastian-pena-lambarri-44r12Ck_CoI-unsplash.jpg";
+
 export interface DiveSite {
     id: string;
     name: string;
@@ -31,7 +37,7 @@ export const diveSites: DiveSite[] = [
         rating: 4.9,
         reviews: 328,
         description: "Famous for its strong currents and massive schools of fish. Use a reef hook and watch the show. Sharks, barracudas, and eagle rays are common.",
-        imageUrl: "https://images.unsplash.com/photo-1582967788606-a171f1080ca8?auto=format&fit=crop&q=80",
+        imageUrl: blueCornerImg,
         coordinates: { lat: 7.1373, lng: 134.2238 },
         marineLife: ["Grey Reef Sharks", "Barracudas", "Eagle Rays", "Napoleon Wrasse"],
         bestMonths: [0, 1, 2, 3, 10, 11], // Nov - Apr
@@ -50,7 +56,7 @@ export const diveSites: DiveSite[] = [
         rating: 4.8,
         reviews: 215,
         description: "One of the best wreck dives in the world. The ship sank in 1911 and is now a thriving artificial reef with incredible biodiversity.",
-        imageUrl: "https://images.unsplash.com/photo-1637680298164-74342b63a61e?auto=format&fit=crop&q=80",
+        imageUrl: yongalaImg,
         coordinates: { lat: -19.3086, lng: 147.6231 },
         marineLife: ["Giant Groupers", "Sea Snakes", "Turtles", "Rays"],
         bestMonths: [5, 6, 7, 8], // Winter (better vis/whales)
@@ -69,7 +75,7 @@ export const diveSites: DiveSite[] = [
         rating: 4.6,
         reviews: 540,
         description: "A giant marine sinkhole. The dive involves descending to see ancient stalactites. Crystal clear water and reef sharks patrolling the depths.",
-        imageUrl: "https://images.unsplash.com/photo-1629168953164-3e9a58406f52?auto=format&fit=crop&q=80",
+        imageUrl: blueHoleImg,
         coordinates: { lat: 17.3160, lng: -87.5351 },
         marineLife: ["Exotic Fish", "Reef Sharks", "Stalactites"],
         bestMonths: [3, 4, 5],
@@ -88,7 +94,7 @@ export const diveSites: DiveSite[] = [
         rating: 4.7,
         reviews: 412,
         description: "A cleaning station where majestic Manta Rays come to be cleaned by cleaner wrasse. A magical experience accessible to all levels.",
-        imageUrl: "https://images.unsplash.com/photo-1544551763-46a42a4571da?auto=format&fit=crop&q=80",
+        imageUrl: mantaPointImg,
         coordinates: { lat: -8.7884, lng: 115.5398 },
         marineLife: ["Manta Rays", "Bamboo Sharks", "Blue Spotted Rays"],
         bestMonths: [3, 4, 5, 6, 7, 8, 9, 10],

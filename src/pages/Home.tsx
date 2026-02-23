@@ -11,7 +11,10 @@ const Home = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 {/* Background Overlay - Would normally be a video or image */}
                 <div className="absolute inset-0 bg-ocean-dark z-0">
-                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544551763-46a42a4571da?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
+                    <div
+                        className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-overlay transition-transform duration-[20000ms] hover:scale-105"
+                        style={{ backgroundImage: `url('/src/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg')` }}
+                    ></div>
                     <div className="absolute inset-0 bg-gradient-to-t from-ocean-dark via-transparent to-transparent"></div>
                 </div>
 

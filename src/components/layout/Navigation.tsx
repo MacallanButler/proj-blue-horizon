@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Anchor } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -39,10 +39,7 @@ const Navigation = () => {
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-2 group">
-                    <Anchor className="h-8 w-8 text-primary transition-transform group-hover:rotate-45" />
-                    <span className="text-xl font-heading font-bold tracking-wider text-white">
-                        BLUE <span className="text-primary">HORIZON</span>
-                    </span>
+                    <img src="/src/assets/branding/blue-horizon.png" alt="Blue Horizon" className="h-10 w-auto transition-transform group-hover:scale-105" />
                 </Link>
 
                 {/* Desktop Nav */}
