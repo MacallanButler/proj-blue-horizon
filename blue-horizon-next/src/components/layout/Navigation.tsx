@@ -42,7 +42,7 @@ const Navigation = () => {
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 group">
-                    <img src="/src/assets/branding/blue-horizon.png" alt="Blue Horizon" className="h-10 w-auto transition-transform group-hover:scale-105" />
+                    <img src="/blue-horizon.png" alt="Blue Horizon" className="h-10 w-auto transition-transform group-hover:scale-105" />
                 </Link>
 
                 {/* Desktop Nav */}
