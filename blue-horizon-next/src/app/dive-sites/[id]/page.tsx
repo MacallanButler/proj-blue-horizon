@@ -4,6 +4,8 @@ import { diveSites } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin, Star, Droplets, Thermometer, Wind, Fish, Anchor } from "lucide-react";
 import MarineLifeCalendar from "@/components/features/MarineLifeCalendar";
+import { PADIVerification } from "@/components/features/PADIVerification";
+import { predictMarineLife } from "@/lib/marineAnalytics";
 
 export default async function DiveSiteDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -103,11 +105,33 @@ export default async function DiveSiteDetailsPage({ params }: { params: Promise<
                                 <Fish className="h-6 w-6 text-primary" /> Marine Life Calendar
                             </h2>
                             <MarineLifeCalendar bestMonths={site.bestMonths} />
-                            <div className="mt-6 flex flex-wrap gap-2">
-                                {site.marineLife.map((animal) => (
-                                    <span key={animal} className="px-3 py-1 rounded-full bg-ocean-light/30 border border-ocean-light/20 text-slate-300 text-sm">
-                                        {animal}
-                                    </span>
+                            <div className="mt-6 space-y-2">
+                                {predictMarineLife(site).map((p) => (
+                                    <div key={p.species} className="flex items-center justify-between bg-ocean-dark/30 border border-ocean-light/10 p-3 rounded-lg">
+                                        <div>
+                                            <span className="text-sm font-medium text-white">{p.species}</span>
+                                            <p className="text-xs text-slate-500 mt-0.5">{p.note}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2 shrink-0 ml-3">
+                                            {p.peakSeason && (
+                                                <span className="text-[10px] font-bold text-amber-400 bg-amber-900/30 border border-amber-500/20 px-1.5 py-0.5 rounded">PEAK</span>
+                                            )}
+                                            <div className="w-20">
+                                                <div className="flex justify-end text-xs font-mono font-bold mb-0.5" style={{
+                                                    color: p.likelihood >= 70 ? '#34d399' : p.likelihood >= 40 ? '#fbbf24' : '#f87171'
+                                                }}>{p.likelihood}%</div>
+                                                <div className="w-full h-1.5 bg-ocean-deep rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full rounded-full"
+                                                        style={{
+                                                            width: `${p.likelihood}%`,
+                                                            background: p.likelihood >= 70 ? '#34d399' : p.likelihood >= 40 ? '#fbbf24' : '#f87171'
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
                         </section>
@@ -164,15 +188,11 @@ export default async function DiveSiteDetailsPage({ params }: { params: Promise<
                             </div>
                         </div>
 
-                        <div className="bg-primary/5 rounded-2xl p-6 border border-primary/20">
-                            <h3 className="text-lg font-bold text-white mb-2">Dive with Purpose</h3>
-                            <p className="text-sm text-slate-400 mb-4">
-                                This site participates in the Coral Watch monitoring program.
-                            </p>
-                            <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-ocean-deep">
-                                Add Conservation Dive
-                            </Button>
-                        </div>
+                        <PADIVerification
+                            siteId={site.id}
+                            requiredLevel={site.difficulty === "Beginner" ? "Open Water" : "Advanced"}
+                        />
+
                     </div>
                 </div>
             </div>

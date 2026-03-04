@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Star, Calendar } from "lucide-react";
 import { diveSites } from "@/data/mockData";
 import DiveSiteCard from "@/components/features/DiveSiteCard";
+import { ImpactCounters } from "@/components/features/ImpactCounters";
 
 export default function Home() {
   return (
@@ -94,6 +95,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Impact Counters */}
+      <ImpactCounters />
     </div>
   );
 }
