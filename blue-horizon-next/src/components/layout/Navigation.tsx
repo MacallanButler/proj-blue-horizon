@@ -28,7 +28,6 @@ const Navigation = () => {
         { name: "Dive Sites", path: "/dive-sites" },
         { name: "Courses", path: "/courses" },
         { name: "Conservation", path: "/conservation" },
-        { name: "Logbook", path: "/logbook" },
     ];
 
     return (

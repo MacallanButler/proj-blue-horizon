@@ -10,13 +10,15 @@ export default function Home() {
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Overlay */}
-        <div className="absolute inset-0 bg-ocean-dark z-0">
+        {/* Full-screen ocean background */}
+        <div className="absolute inset-0 z-0">
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-overlay transition-transform duration-[20000ms] hover:scale-105"
-            style={{ backgroundImage: `url('/src/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg')` }}
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-ocean-dark via-transparent to-transparent"></div>
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-[25000ms] hover:scale-105"
+            style={{ backgroundImage: `url('https://images.unsplash.com/photo-1682687982501-1e58ab814714?q=80&w=2670&auto=format&fit=crop')` }}
+          />
+          {/* Gradient overlay for text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-ocean-deep/60 via-ocean-deep/30 to-ocean-deep/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ocean-deep/40 to-transparent" />
         </div>
 
         <div className="relative z-10 container mx-auto px-6 text-center">
@@ -29,7 +31,7 @@ export default function Home() {
               Deep Unknown
             </span>
           </h1>
-          <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 animate-fade-in-up delay-200">
+          <p className="text-slate-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 animate-fade-in-up delay-200">
             Experience the world's most breathtaking underwater destinations with
             unmatched safety, transparency, and conservation focus.
           </p>

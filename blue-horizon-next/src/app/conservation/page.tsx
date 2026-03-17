@@ -74,19 +74,44 @@ export default function ConservationPage() {
 
                 <div className="bg-primary/10 border border-primary/30 rounded-xl p-8 text-center">
                     <h2 className="text-2xl font-bold mb-4">
-                        Join Our Conservation Efforts
+                        Support Marine Conservation
                     </h2>
-                    <p className="text-slate-300 max-w-xl mx-auto mb-6">
-                        Whether you're a certified diver or just passionate
-                        about the ocean, there's a place for you in our
-                        conservation programs.
+                    <p className="text-slate-300 max-w-xl mx-auto mb-8">
+                        These organisations are doing the critical work of protecting oceans worldwide. 
+                        Every contribution matters — from volunteering to monthly donations.
                     </p>
-                    <Button
-                        asChild
-                        className="bg-primary text-ocean-deep hover:bg-primary/90 font-bold"
-                    >
-                        <Link href="/booking">Get Involved</Link>
-                    </Button>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <a
+                            href="https://coralrestoration.org"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-col items-center gap-2 p-5 bg-ocean-dark/60 border border-ocean-light/20 rounded-xl hover:border-primary/50 hover:bg-primary/10 transition-all group"
+                        >
+                            <Waves className="w-8 h-8 text-primary" />
+                            <span className="font-bold text-white group-hover:text-primary transition-colors">Coral Restoration<br/>Foundation</span>
+                            <span className="text-xs text-slate-400">Reef regrowth programs</span>
+                        </a>
+                        <a
+                            href="https://seashepherd.org"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-col items-center gap-2 p-5 bg-ocean-dark/60 border border-ocean-light/20 rounded-xl hover:border-primary/50 hover:bg-primary/10 transition-all group"
+                        >
+                            <Fish className="w-8 h-8 text-primary" />
+                            <span className="font-bold text-white group-hover:text-primary transition-colors">Sea Shepherd<br/>Conservation</span>
+                            <span className="text-xs text-slate-400">Direct ocean action</span>
+                        </a>
+                        <a
+                            href="https://www.projectaware.org"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-col items-center gap-2 p-5 bg-ocean-dark/60 border border-ocean-light/20 rounded-xl hover:border-primary/50 hover:bg-primary/10 transition-all group"
+                        >
+                            <Heart className="w-8 h-8 text-primary" />
+                            <span className="font-bold text-white group-hover:text-primary transition-colors">Project AWARE<br/>Foundation</span>
+                            <span className="text-xs text-slate-400">Diver-led conservation</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </main>
