@@ -31,9 +31,10 @@ export function DiveSiteMap({ sites, onSiteClick }: DiveSiteMapProps) {
             });
 
             const map = L.map(containerRef.current!, {
-                center: [10, 100],
-                zoom: 3,
+                center: [15, 20],
+                zoom: 2,
                 zoomControl: true,
+                minZoom: 2,
             });
 
             // Ocean-styled tile layer (CartoDB Dark Matter)
