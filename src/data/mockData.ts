@@ -1,8 +1,7 @@
-// Image Imports
-import blueCornerImg from "@/assets/sites/wouter-naert-m6Sfxlts7SI-unsplash.jpg";
-import yongalaImg from "@/assets/sites/neom-yx7TJle8LhM-unsplash.jpg";
-import blueHoleImg from "@/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg";
-import mantaPointImg from "@/assets/sites/sebastian-pena-lambarri-44r12Ck_CoI-unsplash.jpg";
+const blueCornerImg = "/assets/sites/wouter-naert-m6Sfxlts7SI-unsplash.jpg";
+const yongalaImg = "/assets/sites/neom-yx7TJle8LhM-unsplash.jpg";
+const blueHoleImg = "/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg";
+const mantaPointImg = "/assets/sites/sebastian-pena-lambarri-44r12Ck_CoI-unsplash.jpg";
 
 export interface DiveSite {
     id: string;

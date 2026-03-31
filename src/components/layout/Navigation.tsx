@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -7,7 +10,7 @@ import { cn } from "@/lib/utils";
 const Navigation = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const location = useLocation();
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -19,13 +22,12 @@ const Navigation = () => {
 
     useEffect(() => {
         setIsMobileMenuOpen(false);
-    }, [location]);
+    }, [pathname]);
 
     const navLinks = [
         { name: "Dive Sites", path: "/dive-sites" },
         { name: "Courses", path: "/courses" },
         { name: "Conservation", path: "/conservation" },
-        { name: "Logbook", path: "/logbook" },
     ];
 
     return (
@@ -38,8 +40,10 @@ const Navigation = () => {
             )}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
-                <Link to="/" className="flex items-center gap-2 group">
-                    <img src="/src/assets/branding/blue-horizon.png" alt="Blue Horizon" className="h-10 w-auto transition-transform group-hover:scale-105" />
+                <Link href="/" className="flex items-center gap-2 group">
+                    <span className="text-2xl font-heading font-bold text-white tracking-widest uppercase transition-transform group-hover:scale-105">
+                        BLUE <span className="text-primary">HORIZON</span>
+                    </span>
                 </Link>
 
                 {/* Desktop Nav */}
@@ -47,14 +51,14 @@ const Navigation = () => {
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
-                            to={link.path}
+                            href={link.path}
                             className="text-sm font-medium text-slate-200 hover:text-primary transition-colors"
                         >
                             {link.name}
                         </Link>
                     ))}
                     <Button asChild variant="default" className="bg-primary text-ocean-deep hover:bg-primary/90 font-bold">
-                        <Link to="/booking">Book a Dive</Link>
+                        <Link href="/booking">Book a Dive</Link>
                     </Button>
                 </div>
 
@@ -74,14 +78,14 @@ const Navigation = () => {
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
-                                to={link.path}
+                                href={link.path}
                                 className="text-lg font-medium text-slate-200 hover:text-primary"
                             >
                                 {link.name}
                             </Link>
                         ))}
                         <Button asChild className="w-full bg-primary text-ocean-deep font-bold mt-4">
-                            <Link to="/booking">Book a Dive</Link>
+                            <Link href="/booking">Book a Dive</Link>
                         </Button>
                     </div>
                 </div>

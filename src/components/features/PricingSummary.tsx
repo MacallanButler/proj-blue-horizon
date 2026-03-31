@@ -21,7 +21,7 @@ const PricingSummary = ({ basePrice, gearItems, extras }: PricingSummaryProps) =
     const total = subtotal + fees;
 
     return (
-        <div className="bg-ocean-mid/30 rounded-xl p-6 border border-ocean-light/20 backdrop-blur-md">
+        <div className="bg-ocean-mid/30 rounded-xl p-6 border border-ocean-light/20 backdrop-blur-md shadow-[0_0_40px_rgba(45,212,191,0.06)] ring-1 ring-teal-400/10">
             <h3 className="text-xl font-heading font-bold text-white mb-4">Pricing Transparency</h3>
 
             <div className="space-y-4">

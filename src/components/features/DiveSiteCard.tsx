@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Star, MapPin, Droplets, Wind, ArrowRight } from "lucide-react";
 import { DiveSite } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
@@ -62,7 +62,7 @@ const DiveSiteCard = ({ site }: DiveSiteCardProps) => {
                 </div>
 
                 <div className="mt-auto">
-                    <Link to={`/dive-sites/${site.id}`}>
+                    <Link href={`/dive-sites/${site.id}`}>
                         <Button variant="outline" className="w-full border-primary/20 text-primary hover:bg-primary hover:text-ocean-deep group-hover:border-primary">
                             View Details <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                         </Button>
