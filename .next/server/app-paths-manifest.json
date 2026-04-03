@@ -1,7 +1,7 @@
 {
-  "/page": "app/page.js",
-  "/dive-sites/page": "app/dive-sites/page.js",
   "/conservation/page": "app/conservation/page.js",
+  "/dive-sites/page": "app/dive-sites/page.js",
   "/courses/page": "app/courses/page.js",
-  "/booking/page": "app/booking/page.js"
+  "/booking/page": "app/booking/page.js",
+  "/page": "app/page.js"
 }

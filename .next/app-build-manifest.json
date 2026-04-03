@@ -11,11 +11,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/dive-sites/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dive-sites/page.js"
-    ],
     "/courses/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -25,6 +20,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/conservation/page.js"
+    ],
+    "/dive-sites/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/dive-sites/page.js"
     ],
     "/booking/page": [
       "static/chunks/webpack.js",

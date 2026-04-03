@@ -19,9 +19,6 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10 container mx-auto px-6 text-center">
-                    <span className="inline-block py-1 px-3 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6 animate-fade-in-up">
-                        New: Marine Life Tracking Calendar
-                    </span>
                     <h1 className="text-5xl md:text-7xl font-heading font-bold text-white mb-6 leading-tight animate-fade-in-up delay-100">
                         Dive Into the <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">
@@ -42,40 +39,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
-            {/* Quick Search Section (Floating) */}
-            <div className="relative z-20 -mt-24 container mx-auto px-6">
-                <div className="bg-ocean-mid/90 backdrop-blur-lg border border-ocean-light/20 rounded-2xl p-6 shadow-2xl">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Destination</label>
-                            <div className="flex items-center gap-2 p-3 bg-ocean-dark/50 rounded-lg border border-ocean-light/10 text-slate-200">
-                                <MapPin className="h-5 w-5 text-primary" />
-                                <span className="text-sm">Raja Ampat, Indonesia</span>
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Date</label>
-                            <div className="flex items-center gap-2 p-3 bg-ocean-dark/50 rounded-lg border border-ocean-light/10 text-slate-200">
-                                <Calendar className="h-5 w-5 text-primary" />
-                                <span className="text-sm">Nov 12 - Nov 19</span>
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Certification</label>
-                            <div className="flex items-center gap-2 p-3 bg-ocean-dark/50 rounded-lg border border-ocean-light/10 text-slate-200">
-                                <Star className="h-5 w-5 text-primary" />
-                                <span className="text-sm">Open Water Diver</span>
-                            </div>
-                        </div>
-                        <div className="flex items-end">
-                            <Button className="w-full h-[46px] bg-primary text-ocean-deep font-bold">
-                                Search Dives
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             {/* Featured Section Placeholder */}
             <section className="py-24">
