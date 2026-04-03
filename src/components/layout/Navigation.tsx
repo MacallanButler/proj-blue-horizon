@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -13,9 +12,7 @@ const Navigation = () => {
     const pathname = usePathname();
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
@@ -35,34 +32,42 @@ const Navigation = () => {
             className={cn(
                 "fixed top-0 z-50 w-full transition-all duration-300 border-b border-transparent",
                 isScrolled
-                    ? "bg-ocean-dark/95 backdrop-blur-md border-ocean-light/20 py-3"
+                    ? "bg-slate-950/95 backdrop-blur-md border-slate-700/30 py-3"
                     : "bg-transparent py-5"
             )}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 group">
-                    <span className="text-2xl font-heading font-bold text-white tracking-widest uppercase transition-transform group-hover:scale-105">
-                        BLUE <span className="text-primary">HORIZON</span>
+                    <span className="text-2xl font-bold text-white tracking-widest uppercase transition-transform group-hover:scale-105">
+                        BLUE <span className="text-cyan-400">HORIZON</span>
                     </span>
                 </Link>
 
-                {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.path}
-                            className="text-sm font-medium text-slate-200 hover:text-primary transition-colors"
+                            className={cn(
+                                "text-sm font-medium transition-colors",
+                                pathname === link.path
+                                    ? "text-cyan-400"
+                                    : "text-slate-300 hover:text-cyan-400"
+                            )}
+                            style={{ fontFamily: "system-ui, sans-serif" }}
                         >
                             {link.name}
                         </Link>
                     ))}
-                    <Button asChild variant="default" className="bg-primary text-ocean-deep hover:bg-primary/90 font-bold">
-                        <Link href="/booking">Book a Dive</Link>
-                    </Button>
+                    <Link
+                        href="/booking"
+                        className="bg-cyan-400 text-slate-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-cyan-300 transition-colors duration-200"
+                        style={{ fontFamily: "system-ui, sans-serif" }}
+                    >
+                        Book a Dive
+                    </Link>
                 </div>
 
-                {/* Mobile Toggle */}
                 <button
                     className="md:hidden text-white"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -71,22 +76,26 @@ const Navigation = () => {
                 </button>
             </div>
 
-            {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 w-full bg-ocean-dark border-b border-ocean-light/20 shadow-xl">
+                <div className="md:hidden absolute top-full left-0 w-full bg-slate-950/98 border-b border-slate-700/30 shadow-xl">
                     <div className="flex flex-col p-6 gap-4">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
                                 href={link.path}
-                                className="text-lg font-medium text-slate-200 hover:text-primary"
+                                className="text-lg font-medium text-slate-200 hover:text-cyan-400 transition-colors"
+                                style={{ fontFamily: "system-ui, sans-serif" }}
                             >
                                 {link.name}
                             </Link>
                         ))}
-                        <Button asChild className="w-full bg-primary text-ocean-deep font-bold mt-4">
-                            <Link href="/booking">Book a Dive</Link>
-                        </Button>
+                        <Link
+                            href="/booking"
+                            className="w-full text-center bg-cyan-400 text-slate-900 font-bold text-sm px-5 py-3 rounded-full hover:bg-cyan-300 transition-colors duration-200 mt-2"
+                            style={{ fontFamily: "system-ui, sans-serif" }}
+                        >
+                            Book a Dive
+                        </Link>
                     </div>
                 </div>
             )}

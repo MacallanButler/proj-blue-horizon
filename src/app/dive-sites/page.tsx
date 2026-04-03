@@ -1,35 +1,64 @@
+"use client";
+
+import { useState } from "react";
 import { diveSites } from "@/data/mockData";
 import DiveSiteCard from "@/components/features/DiveSiteCard";
-import { Button } from "@/components/ui/button";
+
+const FILTERS = ["All", "Beginner", "Intermediate", "Advanced", "Expert"];
 
 export default function DiveSites() {
+    const [active, setActive] = useState("All");
+    const filtered = active === "All" ? diveSites : diveSites.filter((s) => s.difficulty === active);
+
     return (
-        <div className="pt-24 min-h-screen pb-20">
-            <div className="container mx-auto px-6">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-                    <div>
-                        <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">
-                            Explore Dive Sites
-                        </h1>
-                        <p className="text-slate-400 max-w-xl text-lg">
-                            Discover the world's most incredible underwater destinations.
-                            Filter by difficulty, wildlife, or depth to find your perfect dive.
-                        </p>
-                    </div>
+        <div className="min-h-screen pb-20">
+            <div
+                className="fixed inset-0 pointer-events-none opacity-[0.025]"
+                style={{
+                    backgroundImage:
+                        "linear-gradient(rgba(100,220,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(100,220,255,1) 1px, transparent 1px)",
+                    backgroundSize: "60px 60px",
+                }}
+            />
+
+            <div className="relative container mx-auto px-6 pt-32">
+                <div className="mb-12">
+                    <h1
+                        className="text-5xl md:text-6xl font-bold text-white mb-4"
+                        style={{ letterSpacing: "-0.02em" }}
+                    >
+                        Explore{" "}
+                        <span
+                            className="text-transparent bg-clip-text"
+                            style={{ backgroundImage: "linear-gradient(90deg, #22d3ee, #0ea5e9)" }}
+                        >
+                            Dive Sites
+                        </span>
+                    </h1>
+                    <p className="text-slate-400 max-w-xl text-lg" style={{ fontFamily: "system-ui, sans-serif" }}>
+                        Discover the world's most incredible underwater destinations. Filter by difficulty to find your perfect dive.
+                    </p>
                 </div>
 
-                {/* Filters Placeholder */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                    {["All Difficulties", "Beginner", "Advanced", "Wreck", "Reef"].map((filter, i) => (
-                        <Button key={i} variant="outline" size="sm"
-                            className={`border-ocean-light/20 text-slate-300 hover:text-white hover:border-primary/50 ${i === 0 ? 'bg-primary/10 border-primary/50 text-white' : 'bg-transparent'}`}>
-                            {filter}
-                        </Button>
+                <div className="flex flex-wrap gap-2 mb-10">
+                    {FILTERS.map((f) => (
+                        <button
+                            key={f}
+                            onClick={() => setActive(f)}
+                            style={{ fontFamily: "system-ui, sans-serif" }}
+                            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-200 border ${
+                                active === f
+                                    ? "bg-cyan-400 text-slate-900 border-cyan-400"
+                                    : "bg-transparent text-slate-400 border-slate-600 hover:border-slate-400 hover:text-slate-200"
+                            }`}
+                        >
+                            {f}
+                        </button>
                     ))}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {diveSites.map((site) => (
+                    {filtered.map((site) => (
                         <DiveSiteCard key={site.id} site={site} />
                     ))}
                 </div>

@@ -1,4 +1,3 @@
-
 import { Separator } from "@/components/ui/separator";
 
 interface PricingItem {
@@ -17,31 +16,33 @@ const PricingSummary = ({ basePrice, gearItems, extras }: PricingSummaryProps) =
     const gearTotal = gearItems.reduce((acc, item) => acc + item.cost, 0);
     const extrasTotal = extras.reduce((acc, item) => acc + item.cost, 0);
     const subtotal = basePrice + gearTotal + extrasTotal;
-    const fees = Math.round(subtotal * 0.05); // 5% service/conservation fee
+    const fees = Math.round(subtotal * 0.05);
     const total = subtotal + fees;
 
     return (
-        <div className="bg-ocean-mid/30 rounded-xl p-6 border border-ocean-light/20 backdrop-blur-md shadow-[0_0_40px_rgba(45,212,191,0.06)] ring-1 ring-teal-400/10">
-            <h3 className="text-xl font-heading font-bold text-white mb-4">Pricing Transparency</h3>
+        <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/60">
+            <h3 className="text-xl font-bold text-white mb-6">Pricing Breakdown</h3>
 
             <div className="space-y-4">
-                {/* Base Dive */}
                 <div className="flex justify-between items-center text-slate-200">
                     <div>
                         <span className="font-semibold block">2-Tank Boat Dive</span>
-                        <span className="text-xs text-slate-400">Includes boat trip, weights, and guide</span>
+                        <span className="text-xs text-slate-500" style={{ fontFamily: "system-ui, sans-serif" }}>
+                            Includes boat, weights & guide
+                        </span>
                     </div>
                     <span className="font-bold">${basePrice}</span>
                 </div>
 
-                <Separator className="bg-ocean-light/10" />
+                <Separator className="bg-slate-700/60" />
 
-                {/* Gear */}
                 {gearItems.length > 0 && (
                     <div className="space-y-2">
-                        <span className="text-xs font-semibold text-primary uppercase tracking-wider">Equipment Rental</span>
+                        <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wider" style={{ fontFamily: "system-ui, sans-serif" }}>
+                            Equipment Rental
+                        </span>
                         {gearItems.map((item, index) => (
-                            <div key={index} className="flex justify-between text-sm text-slate-300">
+                            <div key={index} className="flex justify-between text-sm text-slate-300" style={{ fontFamily: "system-ui, sans-serif" }}>
                                 <span>{item.name}</span>
                                 <span>${item.cost}</span>
                             </div>
@@ -49,12 +50,13 @@ const PricingSummary = ({ basePrice, gearItems, extras }: PricingSummaryProps) =
                     </div>
                 )}
 
-                {/* Extras */}
                 {extras.length > 0 && (
-                    <div className="space-y-2 mt-4">
-                        <span className="text-xs font-semibold text-primary uppercase tracking-wider">Add-ons</span>
+                    <div className="space-y-2">
+                        <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wider" style={{ fontFamily: "system-ui, sans-serif" }}>
+                            Add-ons
+                        </span>
                         {extras.map((item, index) => (
-                            <div key={index} className="flex justify-between text-sm text-slate-300">
+                            <div key={index} className="flex justify-between text-sm text-slate-300" style={{ fontFamily: "system-ui, sans-serif" }}>
                                 <span>{item.name}</span>
                                 <span>${item.cost}</span>
                             </div>
@@ -62,20 +64,20 @@ const PricingSummary = ({ basePrice, gearItems, extras }: PricingSummaryProps) =
                     </div>
                 )}
 
-                <Separator className="bg-ocean-light/10 my-4" />
+                <Separator className="bg-slate-700/60" />
 
-                <div className="flex justify-between text-sm text-slate-400">
-                    <span>Marine Park & Service Fees (5%)</span>
+                <div className="flex justify-between text-sm text-slate-400" style={{ fontFamily: "system-ui, sans-serif" }}>
+                    <span>Marine Park & Service Fee (5%)</span>
                     <span>${fees}</span>
                 </div>
 
-                <div className="flex justify-between items-end mt-2 pt-4 border-t border-ocean-light/20">
+                <div className="flex justify-between items-end pt-4 border-t border-slate-700/60">
                     <span className="text-lg font-bold text-white">Total</span>
-                    <span className="text-2xl font-bold text-primary">${total}</span>
+                    <span className="text-2xl font-bold text-cyan-400">${total}</span>
                 </div>
 
-                <p className="text-[10px] text-slate-500 mt-4 text-center">
-                    * 2% of every booking goes directly to marine conservation efforts via our "Dive with Purpose" fund.
+                <p className="text-[10px] text-slate-600 text-center pt-2" style={{ fontFamily: "system-ui, sans-serif" }}>
+                    A portion of every booking goes directly to marine conservation via our Dive with Purpose fund.
                 </p>
             </div>
         </div>
