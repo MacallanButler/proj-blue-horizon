@@ -58,7 +58,7 @@ export default async function DiveSiteDetails({ params }: { params: Promise<{ id
                             </div>
                         </div>
                         <Link
-                            href="/booking"
+                            href={`/booking?type=dive&site=${site.id}`}
                             className="bg-cyan-400 text-slate-900 font-bold px-8 py-4 rounded-full text-base hover:bg-cyan-300 transition-colors duration-200 shadow-lg"
                             style={{ fontFamily: "system-ui, sans-serif" }}
                         >

@@ -9,15 +9,13 @@ export default function Home() {
             {/* Hero */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0" style={{ background: "#020d18" }}>
+                    {/* Image — opacity raised, mix-blend removed so it shows true color */}
                     <div
-                        className="absolute inset-0 bg-cover bg-center opacity-75 transition-transform hover:scale-105"
-                        style={{ 
-                            backgroundImage: `url('/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg')`,
-                            transitionDuration: "20000ms"
-                        }}
+                        className="absolute inset-0 bg-cover bg-center opacity-75 transition-transform duration-[20000ms] hover:scale-105"
+                        style={{ backgroundImage: `url('/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg')` }}
                     />
-                    <div className="absolute inset-0 bg-slate-950/40 z-0" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
+                    {/* Lighter gradient — only darkens bottom third for text legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
                 </div>
 
                 <div
@@ -65,7 +63,7 @@ export default function Home() {
                         </Link>
                         <Link
                             href="/courses"
-                            className="border border-slate-600 text-white font-semibold px-8 py-3 rounded-full text-base hover:border-slate-400 hover:bg-white/5 transition-all duration-200"
+                            className="border border-slate-400/60 text-white font-semibold px-8 py-3 rounded-full text-base hover:border-white hover:bg-white/10 transition-all duration-200"
                             style={{ fontFamily: "system-ui, sans-serif" }}
                         >
                             View Courses

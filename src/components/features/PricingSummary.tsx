@@ -10,9 +10,17 @@ interface PricingSummaryProps {
     basePrice: number;
     gearItems: PricingItem[];
     extras: PricingItem[];
+    title?: string;
+    description?: string;
 }
 
-const PricingSummary = ({ basePrice, gearItems, extras }: PricingSummaryProps) => {
+const PricingSummary = ({ 
+    basePrice, 
+    gearItems, 
+    extras, 
+    title = "2-Tank Boat Dive", 
+    description = "Includes boat, weights & guide" 
+}: PricingSummaryProps) => {
     const gearTotal = gearItems.reduce((acc, item) => acc + item.cost, 0);
     const extrasTotal = extras.reduce((acc, item) => acc + item.cost, 0);
     const subtotal = basePrice + gearTotal + extrasTotal;
@@ -26,9 +34,9 @@ const PricingSummary = ({ basePrice, gearItems, extras }: PricingSummaryProps) =
             <div className="space-y-4">
                 <div className="flex justify-between items-center text-slate-200">
                     <div>
-                        <span className="font-semibold block">2-Tank Boat Dive</span>
+                        <span className="font-semibold block">{title}</span>
                         <span className="text-xs text-slate-500" style={{ fontFamily: "system-ui, sans-serif" }}>
-                            Includes boat, weights & guide
+                            {description}
                         </span>
                     </div>
                     <span className="font-bold">${basePrice}</span>

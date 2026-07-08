@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const TIERS = ["All", "Beginner", "Continuing", "Professional"];
 
 const courses = [
-  // ── BEGINNER ──
   {
-    id: "discover-scuba",
     tier: "Beginner",
     name: "Discover Scuba",
+    slug: "discover-scuba",
     tagline: "Your first breath underwater",
     duration: "Half day",
     prereqs: "None",
@@ -17,16 +17,16 @@ const courses = [
     includes: ["Instructor-led pool session", "Shallow open-water dive", "All equipment provided"],
     elearning: false,
     padiUrl: null,
-    price: "$110",
+    price: "Ask us",
     badge: "No cert required",
     badgeColor: "text-emerald-300 bg-emerald-900/40",
     description:
       "Not ready to commit to a full course? Try diving first. A PADI instructor guides you through the basics in a pool, then takes you on a shallow ocean dive. No experience, no certification needed.",
   },
   {
-    id: "open-water",
     tier: "Beginner",
     name: "Open Water Diver",
+    slug: "open-water-diver",
     tagline: "Your lifetime certification",
     duration: "3–5 days",
     prereqs: "None",
@@ -34,17 +34,16 @@ const courses = [
     includes: ["PADI eLearning (self-paced)", "Pool confined water sessions", "4 open-water dives", "Certification card"],
     elearning: true,
     padiUrl: "https://store.padi.com/en-us/courses/open-water-diver/p/60462-1B2C/",
-    price: "$450",
+    price: "Contact for in-water pricing",
     badge: "Most popular",
     badgeColor: "text-cyan-300 bg-cyan-900/40",
     description:
       "The world's most recognized scuba certification. Complete the knowledge portion online at your own pace, then finish your pool and ocean training with us. Certifies you to dive anywhere in the world.",
   },
-  // ── CONTINUING EDUCATION ──
   {
-    id: "advanced-ow",
     tier: "Continuing",
     name: "Advanced Open Water",
+    slug: "advanced-open-water",
     tagline: "Expand your depth and range",
     duration: "2–3 days",
     prereqs: "Open Water Diver",
@@ -52,16 +51,16 @@ const courses = [
     includes: ["Deep dive (required)", "Underwater navigation (required)", "3 specialty dives of your choice", "Certification card"],
     elearning: true,
     padiUrl: "https://store.padi.com/en-us/courses/advanced-open-water/p/60463-1B2C/",
-    price: "$380",
+    price: "Contact for pricing",
     badge: null,
     badgeColor: null,
     description:
-      "Five adventure dives — two required, three chosen by you. Options include night diving, underwater photography, fish ID, peak performance buoyancy, and more. Each specialty dive counts toward a chain of specialty certifications.",
+      "Five adventure dives — two required, three chosen by you. Options include night diving, underwater photography, fish ID, peak performance buoyancy, and more.",
   },
   {
-    id: "rescue-diver",
     tier: "Continuing",
     name: "Rescue Diver",
+    slug: "rescue-diver",
     tagline: "Be the diver everyone wants nearby",
     duration: "2–3 days",
     prereqs: "Advanced Open Water + EFR",
@@ -69,16 +68,16 @@ const courses = [
     includes: ["Emergency First Response (EFR) course", "Rescue scenarios in pool and open water", "Problem prevention training", "Certification card"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/rescue-diver",
-    price: "$420",
+    price: "Contact for pricing",
     badge: null,
     badgeColor: null,
     description:
-      "Most divers call this their most rewarding course. You'll learn to anticipate problems, manage stress, and respond to dive emergencies — improving your own confidence and the safety of every buddy you dive with.",
+      "Most divers call this their most rewarding course. Learn to anticipate problems, manage stress, and respond to dive emergencies — improving your confidence and the safety of every buddy you dive with.",
   },
   {
-    id: "nitrox",
     tier: "Continuing",
     name: "Enriched Air (Nitrox)",
+    slug: "enriched-air-nitrox",
     tagline: "More bottom time, shorter surface intervals",
     duration: "1 day",
     prereqs: "Open Water Diver",
@@ -86,16 +85,16 @@ const courses = [
     includes: ["PADI eLearning or classroom", "Equipment practice", "Certification card"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/enriched-air-diver",
-    price: "$150",
+    price: "Contact for pricing",
     badge: "Quick cert",
     badgeColor: "text-amber-300 bg-amber-900/40",
     description:
-      "Dive with higher oxygen mixtures to extend your bottom time and cut surface intervals on repetitive dives. One of the most practical specialty certs available — especially for multi-dive days.",
+      "Dive with higher oxygen mixtures to extend your bottom time and cut surface intervals on repetitive dives. One of the most practical specialty certs — especially for multi-dive days.",
   },
   {
-    id: "buoyancy",
     tier: "Continuing",
     name: "Peak Performance Buoyancy",
+    slug: "peak-performance-buoyancy",
     tagline: "Move less, see more",
     duration: "1–2 days",
     prereqs: "Open Water Diver",
@@ -103,17 +102,16 @@ const courses = [
     includes: ["Buoyancy skill dives", "Weight and trim assessment", "Certification card"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/peak-performance-buoyancy",
-    price: "$180",
+    price: "Contact for pricing",
     badge: null,
     badgeColor: null,
     description:
-      "The single biggest upgrade most divers can make. Better buoyancy means better air consumption, less reef impact, and a more relaxed dive. Strongly recommended before any conservation or survey dive.",
+      "The single biggest upgrade most divers can make. Better buoyancy means better air consumption, less reef impact, and a more relaxed dive.",
   },
-  // ── PROFESSIONAL ──
   {
-    id: "divemaster",
     tier: "Professional",
     name: "Divemaster",
+    slug: "divemaster",
     tagline: "Lead dives. Start your career.",
     duration: "Varies (weeks–months)",
     prereqs: "Rescue Diver + 40 logged dives",
@@ -121,16 +119,16 @@ const courses = [
     includes: ["Dive theory mastery", "Supervised dive leadership", "Assisting with student courses", "PADI Pro certification"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/divemaster",
-    price: "$850",
+    price: "Contact us for program details",
     badge: "Pro track",
     badgeColor: "text-violet-300 bg-violet-900/40",
     description:
-      "The first professional level in PADI's system. As a Divemaster you lead certified divers, assist instructors, and become a recognized underwater guide. Talk to us about our mentored DM program.",
+      "The first professional level in PADI's system. Lead certified divers, assist instructors, and become a recognized underwater guide. Talk to us about our mentored DM program.",
   },
   {
-    id: "instructor",
     tier: "Professional",
     name: "Open Water Scuba Instructor",
+    slug: "open-water-instructor",
     tagline: "Teach. Travel. Dive for a living.",
     duration: "IDC + IE (2+ weeks)",
     prereqs: "Divemaster + 100 logged dives",
@@ -138,15 +136,15 @@ const courses = [
     includes: ["Instructor Development Course (IDC)", "Emergency First Response Instructor", "PADI Instructor Examination (IE)", "Full instructor certification"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/open-water-scuba-instructor",
-    price: "$1400",
+    price: "Contact us for IDC schedule",
     badge: "Pro track",
     badgeColor: "text-violet-300 bg-violet-900/40",
     description:
-      "Turn your certification into a career. The IDC covers dive theory, teaching methods, and supervised instruction. Upon passing the independent PADI Instructor Examination, you're certified to teach worldwide.",
+      "Turn your certification into a career. The IDC covers dive theory, teaching methods, and supervised instruction. Upon passing the PADI Instructor Examination, you're certified to teach worldwide.",
   },
 ];
 
-const TIER_META = {
+const TIER_META: Record<string, { label: string; description: string; accent: string; border: string }> = {
   Beginner: {
     label: "Beginner",
     description: "No experience needed. Start here.",
@@ -167,7 +165,45 @@ const TIER_META = {
   },
 };
 
-function CourseCard({ course }) {
+function ProgressionPath() {
+  const steps = [
+    { label: "Discover Scuba", sub: "Try it first", color: "bg-emerald-400" },
+    { label: "Open Water", sub: "Entry cert", color: "bg-cyan-400" },
+    { label: "Advanced OW", sub: "Expand range", color: "bg-cyan-500" },
+    { label: "Rescue Diver", sub: "Safety skills", color: "bg-blue-400" },
+    { label: "Divemaster", sub: "Go pro", color: "bg-violet-400" },
+    { label: "Instructor", sub: "Teach", color: "bg-violet-500" },
+  ];
+
+  return (
+    <div className="mb-20 overflow-x-auto">
+      <h2 className="text-2xl font-bold text-white mb-2">The Path</h2>
+      <p className="text-slate-500 text-sm mb-8" style={{ fontFamily: "system-ui, sans-serif" }}>
+        Every level builds on the last. Most divers are happiest at Open Water or Advanced.
+      </p>
+      <div className="flex items-center gap-0 min-w-max">
+        {steps.map((step, i) => (
+          <div key={step.label} className="flex items-center">
+            <div className="flex flex-col items-center">
+              <div className={`w-3 h-3 rounded-full ${step.color}`} />
+              <div className="mt-2 text-center">
+                <div className="text-white text-xs font-semibold whitespace-nowrap" style={{ fontFamily: "system-ui, sans-serif" }}>
+                  {step.label}
+                </div>
+                <div className="text-slate-600 text-[10px] whitespace-nowrap" style={{ fontFamily: "system-ui, sans-serif" }}>
+                  {step.sub}
+                </div>
+              </div>
+            </div>
+            {i < steps.length - 1 && <div className="w-16 h-px bg-slate-700 mx-2 -mt-5" />}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CourseCard({ course, onBook }: { course: typeof courses[0]; onBook: (slug: string) => void }) {
   const [expanded, setExpanded] = useState(false);
   const tm = TIER_META[course.tier];
 
@@ -178,7 +214,6 @@ function CourseCard({ course }) {
       }`}
     >
       <div className="p-6">
-        {/* Header row */}
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -198,14 +233,10 @@ function CourseCard({ course }) {
           </div>
         </div>
 
-        {/* Meta row */}
-        <div
-          className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500 mb-4"
-          style={{ fontFamily: "system-ui, sans-serif" }}
-        >
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500 mb-4" style={{ fontFamily: "system-ui, sans-serif" }}>
           <span>⏱ {course.duration}</span>
           <span>👤 Ages {course.minAge}+</span>
-          <span>📋 Prereqs: {course.prereqs}</span>
+          <span>📋 {course.prereqs}</span>
           {course.elearning && <span className="text-cyan-600">✦ eLearning available</span>}
         </div>
 
@@ -213,19 +244,13 @@ function CourseCard({ course }) {
           {course.description}
         </p>
 
-        {/* Expandable includes */}
         <button
           onClick={() => setExpanded((v) => !v)}
           className="text-xs text-slate-500 hover:text-slate-300 transition-colors duration-200 flex items-center gap-1.5 mb-4"
           style={{ fontFamily: "system-ui, sans-serif" }}
         >
-          <span>{expanded ? "Hide" : "What's included"}</span>
-          <svg
-            className={`w-3 h-3 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <span>{expanded ? "Hide details" : "What's included"}</span>
+          <svg className={`w-3 h-3 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
@@ -233,11 +258,7 @@ function CourseCard({ course }) {
         {expanded && (
           <ul className="mb-4 flex flex-col gap-1.5">
             {course.includes.map((item) => (
-              <li
-                key={item}
-                className="flex items-start gap-2 text-sm text-slate-300"
-                style={{ fontFamily: "system-ui, sans-serif" }}
-              >
+              <li key={item} className="flex items-start gap-2 text-sm text-slate-300" style={{ fontFamily: "system-ui, sans-serif" }}>
                 <span className={`mt-0.5 text-xs ${tm.accent}`}>✦</span>
                 {item}
               </li>
@@ -245,11 +266,8 @@ function CourseCard({ course }) {
           </ul>
         )}
 
-        {/* CTA row */}
         <div className="flex items-center justify-between gap-3 flex-wrap pt-2 border-t border-slate-700/40">
-          <span className="text-slate-500 text-xs" style={{ fontFamily: "system-ui, sans-serif" }}>
-            {course.price}
-          </span>
+          <span className="text-slate-500 text-xs" style={{ fontFamily: "system-ui, sans-serif" }}>{course.price}</span>
           <div className="flex gap-2">
             {course.elearning && course.padiUrl && (
               <a
@@ -262,13 +280,13 @@ function CourseCard({ course }) {
                 Start eLearning ↗
               </a>
             )}
-            <a
-              href={`/booking?type=course&course=${course.id}`}
+            <button
+              onClick={() => onBook(course.slug)}
               className="text-xs font-semibold px-4 py-1.5 rounded-full bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-slate-900 transition-all duration-200"
               style={{ fontFamily: "system-ui, sans-serif" }}
             >
               Book in-water →
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -276,51 +294,15 @@ function CourseCard({ course }) {
   );
 }
 
-function ProgressionPath() {
-  const steps = [
-    { label: "Discover Scuba", sub: "Try it first", color: "bg-emerald-400" },
-    { label: "Open Water", sub: "Entry cert", color: "bg-cyan-400" },
-    { label: "Advanced OW", sub: "Expand range", color: "bg-cyan-500" },
-    { label: "Rescue Diver", sub: "Safety skills", color: "bg-blue-400" },
-    { label: "Divemaster", sub: "Go pro", color: "bg-violet-400" },
-    { label: "Instructor", sub: "Teach", color: "bg-violet-500" },
-  ];
-
-  return (
-    <div className="mb-20 overflow-x-auto">
-      <h2 className="text-2xl font-bold text-white mb-2">The Path</h2>
-      <p className="text-slate-500 text-sm mb-8" style={{ fontFamily: "system-ui, sans-serif" }}>
-        Every level builds on the last. You can stop at any point — most divers are happiest at Open Water or Advanced.
-      </p>
-      <div className="flex items-center gap-0 min-w-max">
-        {steps.map((step, i) => (
-          <div key={step.label} className="flex items-center">
-            <div className="flex flex-col items-center">
-              <div className={`w-3 h-3 rounded-full ${step.color}`} />
-              <div className="mt-2 text-center">
-                <div className="text-white text-xs font-semibold whitespace-nowrap" style={{ fontFamily: "system-ui, sans-serif" }}>
-                  {step.label}
-                </div>
-                <div className="text-slate-600 text-[10px] whitespace-nowrap" style={{ fontFamily: "system-ui, sans-serif" }}>
-                  {step.sub}
-                </div>
-              </div>
-            </div>
-            {i < steps.length - 1 && (
-              <div className="w-16 h-px bg-slate-700 mx-2 -mt-5" />
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function CoursesPage() {
   const [activeTier, setActiveTier] = useState("All");
+  const router = useRouter();
 
-  const filtered =
-    activeTier === "All" ? courses : courses.filter((c) => c.tier === activeTier);
+  const handleBook = (slug: string) => {
+    router.push(`/booking?course=${slug}`);
+  };
+
+  const filtered = activeTier === "All" ? courses : courses.filter((c) => c.tier === activeTier);
 
   const grouped = {
     Beginner: filtered.filter((c) => c.tier === "Beginner"),
@@ -336,7 +318,6 @@ export default function CoursesPage() {
         fontFamily: "'Georgia', 'Times New Roman', serif",
       }}
     >
-      {/* Grid overlay */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.025]"
         style={{
@@ -348,17 +329,13 @@ export default function CoursesPage() {
 
       <div className="relative max-w-6xl mx-auto px-6 py-20">
 
-        {/* ── HERO ── */}
         <div className="mb-16">
-          <h1
-            className="text-5xl md:text-6xl font-bold leading-tight mb-6"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <p className="text-cyan-400 text-xs uppercase tracking-[0.3em] font-semibold mb-4" style={{ fontFamily: "system-ui, sans-serif" }}>
+            Blue Horizon Dive Shop
+          </p>
+          <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6" style={{ letterSpacing: "-0.02em" }}>
             Learn to Dive.<br />
-            <span
-              className="text-transparent bg-clip-text"
-              style={{ backgroundImage: "linear-gradient(90deg, #22d3ee, #818cf8)" }}
-            >
+            <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(90deg, #22d3ee, #818cf8)" }}>
               Then go deeper.
             </span>
           </h1>
@@ -367,10 +344,8 @@ export default function CoursesPage() {
           </p>
         </div>
 
-        {/* ── PROGRESSION PATH ── */}
         <ProgressionPath />
 
-        {/* ── TIER FILTER ── */}
         <div className="flex flex-wrap gap-2 mb-10">
           {TIERS.map((tier) => (
             <button
@@ -388,7 +363,6 @@ export default function CoursesPage() {
           ))}
         </div>
 
-        {/* ── COURSE GROUPS ── */}
         {Object.entries(grouped).map(([tier, tierCourses]) => {
           if (!tierCourses.length) return null;
           const tm = TIER_META[tier];
@@ -397,22 +371,19 @@ export default function CoursesPage() {
               <div className="flex items-center gap-4 mb-6">
                 <div>
                   <h2 className={`text-lg font-bold ${tm.accent}`}>{tm.label}</h2>
-                  <p className="text-slate-600 text-xs mt-0.5" style={{ fontFamily: "system-ui, sans-serif" }}>
-                    {tm.description}
-                  </p>
+                  <p className="text-slate-600 text-xs mt-0.5" style={{ fontFamily: "system-ui, sans-serif" }}>{tm.description}</p>
                 </div>
                 <div className="flex-1 h-px bg-slate-800" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {tierCourses.map((course) => (
-                  <CourseCard key={course.name} course={course} />
+                  <CourseCard key={course.name} course={course} onBook={handleBook} />
                 ))}
               </div>
             </div>
           );
         })}
 
-        {/* ── BOTTOM CTA ── */}
         <div className="mt-8 rounded-2xl border border-slate-700/60 bg-slate-800/30 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <h3 className="text-white font-semibold text-lg mb-1">Not sure where to start?</h3>
@@ -421,13 +392,13 @@ export default function CoursesPage() {
             </p>
           </div>
           <div className="flex gap-3 flex-wrap">
-            <a
-              href="/booking?type=course&course=discover-scuba"
-              className="shrink-0 bg-cyan-400 text-slate-900 font-semibold text-sm px-6 py-3 rounded-full hover:bg-cyan-300 transition-colors duration-200"
+            <button
+              onClick={() => handleBook("discover-scuba")}
+              className="shrink-0 bg-cyan-400 text-slate-900 font-bold text-sm px-6 py-3 rounded-full hover:bg-cyan-300 transition-colors duration-200"
               style={{ fontFamily: "system-ui, sans-serif" }}
             >
               Book a try-dive →
-            </a>
+            </button>
             <a
               href="/conservation"
               className="shrink-0 border border-slate-600 text-slate-300 font-semibold text-sm px-6 py-3 rounded-full hover:border-slate-400 hover:text-white transition-colors duration-200"
@@ -437,7 +408,6 @@ export default function CoursesPage() {
             </a>
           </div>
         </div>
-
       </div>
     </div>
   );
