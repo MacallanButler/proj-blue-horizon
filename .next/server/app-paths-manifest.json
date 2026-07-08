@@ -1,9 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/dive-sites/page": "app/dive-sites/page.js",
-  "/conservation/page": "app/conservation/page.js",
-  "/booking/page": "app/booking/page.js",
-  "/page": "app/page.js",
-  "/dive-sites/[id]/page": "app/dive-sites/[id]/page.js",
-  "/courses/page": "app/courses/page.js"
-}
