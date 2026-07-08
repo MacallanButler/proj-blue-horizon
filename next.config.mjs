@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    basePath: '/blue-horizon',
     images: {
         unoptimized: true
     },
