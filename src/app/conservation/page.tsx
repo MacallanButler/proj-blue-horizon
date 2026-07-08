@@ -1,6 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { Check, ShieldAlert, Award, CalendarDays, MapPin } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const orgs = [
   {
@@ -213,11 +224,44 @@ function OrgCard({ org }) {
   );
 }
 
-function EventCard({ event }) {
+function EventCard({ event, onRegisterSuccess }) {
   const c = TYPE_COLORS[event.type] || TYPE_COLORS.Cleanup;
   const isFull = event.filled >= event.spots;
   const pct = Math.round((event.filled / event.spots) * 100);
   const monthNum = event.displayDate.split(" ")[1];
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [certLevel, setCertLevel] = useState("Open Water");
+  const [certNumber, setCertNumber] = useState("");
+  const [conductCheck, setConductCheck] = useState(false);
+  const [waiverCheck, setWaiverCheck] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  const handleRegisterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !conductCheck || !waiverCheck) return;
+    
+    setLoading(true);
+    setTimeout(() => {
+        setLoading(false);
+        setIsRegistered(true);
+        onRegisterSuccess(event.title, event.date);
+    }, 1200);
+  };
+
+  const resetForm = () => {
+    setIsOpen(false);
+    setIsRegistered(false);
+    setName("");
+    setEmail("");
+    setCertLevel("Open Water");
+    setCertNumber("");
+    setConductCheck(false);
+    setWaiverCheck(false);
+  };
 
   return (
     <div
@@ -258,6 +302,7 @@ function EventCard({ event }) {
           <p className="text-slate-400 text-xs leading-relaxed" style={{ fontFamily: "system-ui, sans-serif" }}>
             {event.description}
           </p>
+          
           {/* Capacity bar */}
           <div className="mt-1 flex items-center gap-2">
             <div className="flex-1 h-1 bg-slate-700 rounded-full overflow-hidden">
@@ -273,16 +318,158 @@ function EventCard({ event }) {
               {isFull ? "Full" : `${event.spots - event.filled} spots left`}
             </span>
           </div>
-          <button
-            className={`mt-1 self-start text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-200 ${
-              isFull
-                ? "bg-slate-700 text-slate-500 cursor-default"
-                : "bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-slate-900"
-            }`}
-            style={{ fontFamily: "system-ui, sans-serif" }}
-          >
-            {isFull ? "Join Waitlist" : "Register →"}
-          </button>
+
+          {/* Dialog for Signup */}
+          <Dialog open={isOpen} onOpenChange={(val) => { if (!val) resetForm(); else setIsOpen(true); }}>
+            <DialogTrigger asChild>
+              <button
+                className={`mt-1 self-start text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-200 ${
+                  isFull
+                    ? "bg-slate-700 text-slate-500 cursor-default"
+                    : "bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-slate-900"
+                }`}
+                style={{ fontFamily: "system-ui, sans-serif" }}
+              >
+                {isFull ? "Join Waitlist" : "Register →"}
+              </button>
+            </DialogTrigger>
+            <DialogContent className="bg-slate-900 border border-slate-700/60 text-white shadow-2xl rounded-2xl max-w-md p-6 backdrop-blur-xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold text-white mb-1">
+                  {isFull ? "Join the Waitlist" : "Register for Event"}
+                </DialogTitle>
+                <DialogDescription className="text-slate-400 text-xs mb-4" style={{ fontFamily: "system-ui, sans-serif" }}>
+                  {event.title} — {event.displayDate} at {event.time} ({event.difficulty})
+                </DialogDescription>
+              </DialogHeader>
+
+              {isRegistered ? (
+                <div className="text-center py-6 animate-fade-in-up">
+                  <div className="w-16 h-16 bg-gradient-to-tr from-cyan-400 to-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(34,211,238,0.25)]">
+                    <Check className="w-8 h-8 text-slate-900 stroke-[3]" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">
+                    {isFull ? "Waitlist Request Received!" : "You're Registered!"}
+                  </h3>
+                  <p className="text-slate-400 text-xs max-w-sm mx-auto mb-6 leading-relaxed" style={{ fontFamily: "system-ui, sans-serif" }}>
+                    {isFull 
+                      ? "You've been added to the waitlist. We will contact you immediately if a spot opens up."
+                      : `A confirmation email has been dispatched to ${email} with safety guidelines and meeting details.`}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="bg-cyan-400 text-slate-900 font-bold text-xs px-6 py-2.5 rounded-full hover:bg-cyan-300 transition-colors"
+                    style={{ fontFamily: "system-ui, sans-serif" }}
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleRegisterSubmit} className="space-y-4 text-left" style={{ fontFamily: "system-ui, sans-serif" }}>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Full Name</label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      placeholder="Jacques Cousteau"
+                      className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Email Address</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      placeholder="jacques@horizon.org"
+                      className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Cert Level</label>
+                      <Select value={certLevel} onValueChange={setCertLevel}>
+                        <SelectTrigger className="w-full bg-slate-950 border-slate-800 text-white h-11">
+                          <SelectValue placeholder="Cert level" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-900 border-slate-700 text-white">
+                          <SelectItem value="None">None (Beach cleanup)</SelectItem>
+                          <SelectItem value="Open Water">Open Water</SelectItem>
+                          <SelectItem value="Advanced">Advanced OW</SelectItem>
+                          <SelectItem value="Rescue">Rescue Diver</SelectItem>
+                          <SelectItem value="Master">Master/Pro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">PADI / Agency #</label>
+                      <input
+                        type="text"
+                        value={certNumber}
+                        onChange={(e) => setCertNumber(e.target.value)}
+                        placeholder="Optional"
+                        className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Disclosures checkboxes */}
+                  <div className="space-y-2.5 pt-3 border-t border-slate-800/80">
+                    <div className="flex gap-2.5 items-start cursor-pointer" onClick={() => setConductCheck(!conductCheck)}>
+                      <Checkbox
+                        checked={conductCheck}
+                        className="border-slate-500 data-[state=checked]:bg-cyan-400 data-[state=checked]:text-slate-900 mt-0.5"
+                      />
+                      <span className="text-[11px] text-slate-400 leading-tight">
+                        I agree to uphold the zero-impact environmental code of conduct (e.g. strict buoyancy control, no physical contact with coral or marine life).
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2.5 items-start cursor-pointer" onClick={() => setWaiverCheck(!waiverCheck)}>
+                      <Checkbox
+                        checked={waiverCheck}
+                        className="border-slate-500 data-[state=checked]:bg-cyan-400 data-[state=checked]:text-slate-900 mt-0.5"
+                      />
+                      <span className="text-[11px] text-slate-400 leading-tight">
+                        I agree to the volunteer liability waiver, release, and assume all risk associated with scuba or environmental volunteer work.
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Submit buttons */}
+                  <div className="flex justify-end gap-3 pt-4 border-t border-slate-800/80">
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="text-xs font-semibold text-slate-400 hover:text-white px-4 py-2 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={!name.trim() || !email.trim() || !conductCheck || !waiverCheck || loading}
+                      className="bg-cyan-400 text-slate-900 font-bold text-xs px-6 py-2.5 rounded-full hover:bg-cyan-300 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed transition-all duration-200 min-w-[100px] flex items-center justify-center"
+                    >
+                      {loading ? (
+                        <div className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+                      ) : isFull ? (
+                        "Join Waitlist"
+                      ) : (
+                        "Confirm"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>
@@ -291,9 +478,20 @@ function EventCard({ event }) {
 
 export default function ConservationPage() {
   const [activeTag, setActiveTag] = useState("All");
+  const [eventList, setEventList] = useState(events);
 
   const filteredOrgs =
     activeTag === "All" ? orgs : orgs.filter((o) => o.tags.includes(activeTag));
+
+  const handleRegisterSuccess = (title: string, date: string) => {
+    setEventList((prev) =>
+      prev.map((e) =>
+        e.title === title && e.date === date
+          ? { ...e, filled: Math.min(e.spots, e.filled + 1) }
+          : e
+      )
+    );
+  };
 
   return (
     <div
@@ -373,7 +571,7 @@ export default function ConservationPage() {
           </div>
 
           {["Apr", "May", "Jun"].map((month) => {
-            const monthEvents = events.filter((e) => e.displayDate.startsWith(month));
+            const monthEvents = eventList.filter((e) => e.displayDate.startsWith(month));
             if (!monthEvents.length) return null;
             return (
               <div key={month} className="mb-10">
@@ -388,7 +586,7 @@ export default function ConservationPage() {
                 </div>
                 <div className="flex flex-col gap-3">
                   {monthEvents.map((event) => (
-                    <EventCard key={event.title + event.date} event={event} />
+                    <EventCard key={event.title + event.date} event={event} onRegisterSuccess={handleRegisterSuccess} />
                   ))}
                 </div>
               </div>

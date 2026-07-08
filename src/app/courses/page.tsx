@@ -7,6 +7,7 @@ const TIERS = ["All", "Beginner", "Continuing", "Professional"];
 const courses = [
   // ── BEGINNER ──
   {
+    id: "discover-scuba",
     tier: "Beginner",
     name: "Discover Scuba",
     tagline: "Your first breath underwater",
@@ -16,13 +17,14 @@ const courses = [
     includes: ["Instructor-led pool session", "Shallow open-water dive", "All equipment provided"],
     elearning: false,
     padiUrl: null,
-    price: "Ask us",
+    price: "$110",
     badge: "No cert required",
     badgeColor: "text-emerald-300 bg-emerald-900/40",
     description:
       "Not ready to commit to a full course? Try diving first. A PADI instructor guides you through the basics in a pool, then takes you on a shallow ocean dive. No experience, no certification needed.",
   },
   {
+    id: "open-water",
     tier: "Beginner",
     name: "Open Water Diver",
     tagline: "Your lifetime certification",
@@ -32,7 +34,7 @@ const courses = [
     includes: ["PADI eLearning (self-paced)", "Pool confined water sessions", "4 open-water dives", "Certification card"],
     elearning: true,
     padiUrl: "https://store.padi.com/en-us/courses/open-water-diver/p/60462-1B2C/",
-    price: "Contact for in-water pricing",
+    price: "$450",
     badge: "Most popular",
     badgeColor: "text-cyan-300 bg-cyan-900/40",
     description:
@@ -40,6 +42,7 @@ const courses = [
   },
   // ── CONTINUING EDUCATION ──
   {
+    id: "advanced-ow",
     tier: "Continuing",
     name: "Advanced Open Water",
     tagline: "Expand your depth and range",
@@ -49,13 +52,14 @@ const courses = [
     includes: ["Deep dive (required)", "Underwater navigation (required)", "3 specialty dives of your choice", "Certification card"],
     elearning: true,
     padiUrl: "https://store.padi.com/en-us/courses/advanced-open-water/p/60463-1B2C/",
-    price: "Contact for pricing",
+    price: "$380",
     badge: null,
     badgeColor: null,
     description:
-      "Five adventure dives — two required, three chosen by you. Options include night diving, underwater photography, fish ID, peak performance buoyancy, and more. Each specialty dive counts toward a full specialty certification.",
+      "Five adventure dives — two required, three chosen by you. Options include night diving, underwater photography, fish ID, peak performance buoyancy, and more. Each specialty dive counts toward a chain of specialty certifications.",
   },
   {
+    id: "rescue-diver",
     tier: "Continuing",
     name: "Rescue Diver",
     tagline: "Be the diver everyone wants nearby",
@@ -65,13 +69,14 @@ const courses = [
     includes: ["Emergency First Response (EFR) course", "Rescue scenarios in pool and open water", "Problem prevention training", "Certification card"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/rescue-diver",
-    price: "Contact for pricing",
+    price: "$420",
     badge: null,
     badgeColor: null,
     description:
       "Most divers call this their most rewarding course. You'll learn to anticipate problems, manage stress, and respond to dive emergencies — improving your own confidence and the safety of every buddy you dive with.",
   },
   {
+    id: "nitrox",
     tier: "Continuing",
     name: "Enriched Air (Nitrox)",
     tagline: "More bottom time, shorter surface intervals",
@@ -81,13 +86,14 @@ const courses = [
     includes: ["PADI eLearning or classroom", "Equipment practice", "Certification card"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/enriched-air-diver",
-    price: "Contact for pricing",
+    price: "$150",
     badge: "Quick cert",
     badgeColor: "text-amber-300 bg-amber-900/40",
     description:
       "Dive with higher oxygen mixtures to extend your bottom time and cut surface intervals on repetitive dives. One of the most practical specialty certs available — especially for multi-dive days.",
   },
   {
+    id: "buoyancy",
     tier: "Continuing",
     name: "Peak Performance Buoyancy",
     tagline: "Move less, see more",
@@ -97,7 +103,7 @@ const courses = [
     includes: ["Buoyancy skill dives", "Weight and trim assessment", "Certification card"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/peak-performance-buoyancy",
-    price: "Contact for pricing",
+    price: "$180",
     badge: null,
     badgeColor: null,
     description:
@@ -105,6 +111,7 @@ const courses = [
   },
   // ── PROFESSIONAL ──
   {
+    id: "divemaster",
     tier: "Professional",
     name: "Divemaster",
     tagline: "Lead dives. Start your career.",
@@ -114,13 +121,14 @@ const courses = [
     includes: ["Dive theory mastery", "Supervised dive leadership", "Assisting with student courses", "PADI Pro certification"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/divemaster",
-    price: "Contact us for program details",
+    price: "$850",
     badge: "Pro track",
     badgeColor: "text-violet-300 bg-violet-900/40",
     description:
       "The first professional level in PADI's system. As a Divemaster you lead certified divers, assist instructors, and become a recognized underwater guide. Talk to us about our mentored DM program.",
   },
   {
+    id: "instructor",
     tier: "Professional",
     name: "Open Water Scuba Instructor",
     tagline: "Teach. Travel. Dive for a living.",
@@ -130,7 +138,7 @@ const courses = [
     includes: ["Instructor Development Course (IDC)", "Emergency First Response Instructor", "PADI Instructor Examination (IE)", "Full instructor certification"],
     elearning: true,
     padiUrl: "https://www.padi.com/courses/open-water-scuba-instructor",
-    price: "Contact us for IDC schedule",
+    price: "$1400",
     badge: "Pro track",
     badgeColor: "text-violet-300 bg-violet-900/40",
     description:
@@ -255,7 +263,7 @@ function CourseCard({ course }) {
               </a>
             )}
             <a
-              href="/booking"
+              href={`/booking?type=course&course=${course.id}`}
               className="text-xs font-semibold px-4 py-1.5 rounded-full bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400 hover:text-slate-900 transition-all duration-200"
               style={{ fontFamily: "system-ui, sans-serif" }}
             >
@@ -414,7 +422,7 @@ export default function CoursesPage() {
           </div>
           <div className="flex gap-3 flex-wrap">
             <a
-              href="/booking"
+              href="/booking?type=course&course=discover-scuba"
               className="shrink-0 bg-cyan-400 text-slate-900 font-semibold text-sm px-6 py-3 rounded-full hover:bg-cyan-300 transition-colors duration-200"
               style={{ fontFamily: "system-ui, sans-serif" }}
             >

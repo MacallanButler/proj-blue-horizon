@@ -10,9 +10,13 @@ export default function Home() {
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0" style={{ background: "#020d18" }}>
                     <div
-                        className="absolute inset-0 bg-cover bg-center opacity-50 mix-blend-overlay transition-transform duration-[20000ms] hover:scale-105"
-                        style={{ backgroundImage: `url('/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg')` }}
+                        className="absolute inset-0 bg-cover bg-center opacity-75 transition-transform hover:scale-105"
+                        style={{ 
+                            backgroundImage: `url('/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg')`,
+                            transitionDuration: "20000ms"
+                        }}
                     />
+                    <div className="absolute inset-0 bg-slate-950/40 z-0" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
                 </div>
 
