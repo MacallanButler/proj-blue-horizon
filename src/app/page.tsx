@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { diveSites } from "@/data/mockData";
 import DiveSiteCard from "@/components/features/DiveSiteCard";
@@ -10,12 +11,18 @@ export default function Home() {
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0" style={{ background: "#020d18" }}>
                     <div
-                        className="absolute inset-0 bg-cover bg-center opacity-75 transition-transform hover:scale-105"
-                        style={{ 
-                            backgroundImage: `url('/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg')`,
-                            transitionDuration: "20000ms"
-                        }}
-                    />
+                        className="absolute inset-0 opacity-75 transition-transform hover:scale-105 z-0"
+                        style={{ transitionDuration: "20000ms" }}
+                    >
+                        <Image
+                            src="/assets/sites/neom-HYHYGLs-Rp8-unsplash.jpg"
+                            alt="Blue Horizon underwater banner"
+                            fill
+                            priority
+                            sizes="100vw"
+                            className="object-cover"
+                        />
+                    </div>
                     <div className="absolute inset-0 bg-slate-950/40 z-0" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
                 </div>
