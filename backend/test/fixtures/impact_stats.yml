@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  coral_fragments_planted: 1
+  co2_offset_kg: 1
+  marine_animals_tagged: 1
+  conservation_fund_cents: 1
+
+two:
+  coral_fragments_planted: 1
+  co2_offset_kg: 1
+  marine_animals_tagged: 1
+  conservation_fund_cents: 1

@@ -1,19 +1,29 @@
 import Link from "next/link";
-import { diveSites } from "@/data/mockData";
 import { ArrowLeft, MapPin, Star, Droplets, Thermometer, Wind, Fish, Anchor } from "lucide-react";
 import MarineLifeCalendar from "@/components/features/MarineLifeCalendar";
+import PADIVerification from "@/components/features/PADIVerification";
 
 export default async function DiveSiteDetails({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = await params;
     const { id } = resolvedParams;
-    const site = diveSites.find((s) => s.id === id);
+
+    // Fetch site data from the Rails API
+    let site = null;
+    try {
+        const res = await fetch(`http://localhost:3001/api/v1/dive_sites/${id}`, { cache: "no-store" });
+        if (res.ok) {
+            site = await res.json();
+        }
+    } catch (err) {
+        console.error("Failed to fetch dive site details from API", err);
+    }
 
     if (!site) {
         return <div className="pt-32 text-center text-white min-h-screen">Site not found.</div>;
     }
 
     return (
-        <div className="min-h-screen pb-20">
+        <div className="min-h-screen pb-20 bg-slate-950">
             <div
                 className="fixed inset-0 pointer-events-none opacity-[0.025]"
                 style={{
@@ -48,60 +58,74 @@ export default async function DiveSiteDetails({ params }: { params: Promise<{ id
                             </h1>
                             <div className="flex items-center gap-2 text-slate-300" style={{ fontFamily: "system-ui, sans-serif" }}>
                                 <MapPin className="h-4 w-4 text-cyan-400" />
-                                <span>{site.location}, {site.country}</span>
-                                <span className="mx-2 text-slate-600">·</span>
+                                <span className="text-lg">{site.location}, {site.country}</span>
+                                <span className="mx-2 text-slate-600">•</span>
                                 <div className="flex items-center gap-1">
                                     <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                                     <span className="font-bold text-white">{site.rating}</span>
-                                    <span className="text-sm text-slate-400">({site.reviews} reviews)</span>
+                                    <span className="text-sm">({site.reviews} reviews)</span>
                                 </div>
                             </div>
                         </div>
-                        <Link
-                            href={`/booking?type=dive&site=${site.id}`}
-                            className="bg-cyan-400 text-slate-900 font-bold px-8 py-4 rounded-full text-base hover:bg-cyan-300 transition-colors duration-200 shadow-lg"
-                            style={{ fontFamily: "system-ui, sans-serif" }}
-                        >
-                            Book This Dive
-                        </Link>
+
+                        <div className="flex gap-4">
+                            <Link
+                                href={`/booking?site=${site.id}`}
+                                className="bg-cyan-400 text-slate-900 font-bold text-sm px-6 py-3.5 rounded-full hover:bg-cyan-300 transition-colors duration-200"
+                                style={{ fontFamily: "system-ui, sans-serif" }}
+                            >
+                                Book This Dive
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="relative container mx-auto px-6 pt-12">
+            <div className="container mx-auto px-6 pt-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    {/* Main Content */}
                     <div className="lg:col-span-2 space-y-12">
-
                         <section>
-                            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                                <Anchor className="h-5 w-5 text-cyan-400" /> About the Dive
+                            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                                <Anchor className="h-6 w-6 text-cyan-400" /> About the Dive
                             </h2>
                             <p className="text-slate-300 leading-loose text-lg" style={{ fontFamily: "system-ui, sans-serif" }}>
                                 {site.description}
                             </p>
                         </section>
 
+                        {/* Stats Grid */}
                         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {[
-                                { icon: <Thermometer className="h-5 w-5 text-blue-400" />, label: "Water Temp", value: `${site.temperature.min}°C – ${site.temperature.max}°C`, bg: "bg-blue-900/20" },
-                                { icon: <Droplets className="h-5 w-5 text-teal-400" />, label: "Visibility", value: `${site.visibility.min}m – ${site.visibility.max}m`, bg: "bg-teal-900/20" },
-                                { icon: <Wind className="h-5 w-5 text-indigo-400" />, label: "Current", value: site.currentStrength, bg: "bg-indigo-900/20" },
-                            ].map((stat) => (
-                                <div key={stat.label} className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700/60 flex flex-col items-center text-center">
-                                    <div className={`${stat.bg} p-3 rounded-full mb-3`}>{stat.icon}</div>
-                                    <span className="text-slate-400 text-sm mb-1" style={{ fontFamily: "system-ui, sans-serif" }}>{stat.label}</span>
-                                    <span className="text-lg font-bold text-white" style={{ fontFamily: "system-ui, sans-serif" }}>{stat.value}</span>
+                            <div className="bg-slate-800/30 p-6 rounded-xl border border-slate-700/40 flex flex-col items-center text-center">
+                                <div className="bg-blue-500/10 p-3 rounded-full mb-3">
+                                    <Thermometer className="h-6 w-6 text-blue-400" />
                                 </div>
-                            ))}
+                                <span className="text-slate-400 text-sm mb-1">Water Temp</span>
+                                <span className="text-xl font-bold text-white">{site.temperature.min}°C - {site.temperature.max}°C</span>
+                            </div>
+                            <div className="bg-slate-800/30 p-6 rounded-xl border border-slate-700/40 flex flex-col items-center text-center">
+                                <div className="bg-teal-500/10 p-3 rounded-full mb-3">
+                                    <Droplets className="h-6 w-6 text-teal-400" />
+                                </div>
+                                <span className="text-slate-400 text-sm mb-1">Visibility</span>
+                                <span className="text-xl font-bold text-white">{site.visibility.min}m - {site.visibility.max}m</span>
+                            </div>
+                            <div className="bg-slate-800/30 p-6 rounded-xl border border-slate-700/40 flex flex-col items-center text-center">
+                                <div className="bg-indigo-500/10 p-3 rounded-full mb-3">
+                                    <Wind className="h-6 w-6 text-indigo-400" />
+                                </div>
+                                <span className="text-slate-400 text-sm mb-1">Current Strength</span>
+                                <span className="text-xl font-bold text-white">{site.currentStrength}</span>
+                            </div>
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                                 <Fish className="h-5 w-5 text-cyan-400" /> Marine Life Calendar
                             </h2>
                             <MarineLifeCalendar bestMonths={site.bestMonths} />
                             <div className="mt-4 flex flex-wrap gap-2">
-                                {site.marineLife.map((animal) => (
+                                {site.marineLife.map((animal: string) => (
                                     <span
                                         key={animal}
                                         className="px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/60 text-slate-300 text-sm"
@@ -112,29 +136,14 @@ export default async function DiveSiteDetails({ params }: { params: Promise<{ id
                                 ))}
                             </div>
                         </section>
-
-                        <section>
-                            <h2 className="text-2xl font-bold text-white mb-4">Crowd Forecast</h2>
-                            <div className="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-6">
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="flex-1">
-                                        <div className="flex justify-between text-sm mb-2" style={{ fontFamily: "system-ui, sans-serif" }}>
-                                            <span className="text-slate-400">Current Crowd Level</span>
-                                            <span className="text-amber-400 font-bold">Moderate</span>
-                                        </div>
-                                        <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                            <div className="h-full bg-amber-400 w-[60%] rounded-full" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-sm text-slate-400" style={{ fontFamily: "system-ui, sans-serif" }}>
-                                    To avoid crowds, we recommend booking a morning dive (around 8:00 AM) or visiting on weekdays.
-                                </p>
-                            </div>
-                        </section>
                     </div>
 
                     <div className="space-y-6">
+                        <PADIVerification
+                            siteId={site.id}
+                            requiredLevel={site.difficulty === "Beginner" ? "Open Water" : "Advanced"}
+                        />
+
                         <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700/60">
                             <h3 className="text-lg font-bold text-white mb-4">Underwater Topography</h3>
                             <div className="relative h-64 w-full rounded-xl overflow-hidden border border-slate-700/40" style={{ background: "#020c1b" }}>

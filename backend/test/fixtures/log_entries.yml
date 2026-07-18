@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  booking: one
+  site_name: MyString
+  date: 2026-07-17
+  depth: 1
+  duration: 1
+  water_temp: 1
+  visibility: 1
+  highlights: MyText
+
+two:
+  user: two
+  booking: two
+  site_name: MyString
+  date: 2026-07-17
+  depth: 1
+  duration: 1
+  water_temp: 1
+  visibility: 1
+  highlights: MyText

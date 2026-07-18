@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  course: one
+  status: 1
+  deposit_paid_cents: 1
+  balance_due_cents: 1
+  stripe_payment_intent_id: MyString
+  stripe_balance_intent_id: MyString
+
+two:
+  user: two
+  course: two
+  status: 1
+  deposit_paid_cents: 1
+  balance_due_cents: 1
+  stripe_payment_intent_id: MyString
+  stripe_balance_intent_id: MyString

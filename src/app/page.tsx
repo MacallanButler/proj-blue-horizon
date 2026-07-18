@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { diveSites } from "@/data/mockData";
 import DiveSiteCard from "@/components/features/DiveSiteCard";
+import ImpactCounters from "@/components/features/ImpactCounters";
 
 export default function Home() {
     return (
@@ -109,6 +110,8 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <ImpactCounters />
 
             {/* Conservation strip */}
             <section className="border-t border-slate-800/60 py-16">

@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  location: MyString
+  country: MyString
+  depth_min: 1
+  depth_max: 1
+  visibility_min: 1
+  visibility_max: 1
+  temperature_min: 1
+  temperature_max: 1
+  difficulty: MyString
+  rating: 1.5
+  reviews: 1
+  description: MyText
+  image_url: MyString
+  lat: 1.5
+  lng: 1.5
+  marine_life: MyText
+  best_months: MyText
+  current_strength: MyString
+  features: MyText
+
+two:
+  name: MyString
+  location: MyString
+  country: MyString
+  depth_min: 1
+  depth_max: 1
+  visibility_min: 1
+  visibility_max: 1
+  temperature_min: 1
+  temperature_max: 1
+  difficulty: MyString
+  rating: 1.5
+  reviews: 1
+  description: MyText
+  image_url: MyString
+  lat: 1.5
+  lng: 1.5
+  marine_life: MyText
+  best_months: MyText
+  current_strength: MyString
+  features: MyText

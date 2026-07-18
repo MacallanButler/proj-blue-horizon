@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ShieldAlert, Award, CalendarDays, MapPin } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Check, ShieldAlert, Award, CalendarDays, MapPin, Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { apiClient } from "@/lib/apiClient";
 
 const orgs = [
   {
@@ -70,195 +71,164 @@ const orgs = [
   },
 ];
 
-const events = [
-  {
-    title: "Dive Against Debris",
-    type: "Cleanup",
-    date: "2025-04-12",
-    displayDate: "Apr 12",
-    day: "Sat",
-    time: "8:00 AM",
-    spots: 12,
-    filled: 7,
-    description:
-      "Collect and log underwater debris at Blue Horizon's adopted site. Data submitted to the PADI AWARE global database.",
-    difficulty: "Open Water+",
-  },
-  {
-    title: "Coral Awareness Seminar",
-    type: "Education",
-    date: "2025-04-19",
-    displayDate: "Apr 19",
-    day: "Sat",
-    time: "10:00 AM",
-    spots: 20,
-    filled: 11,
-    description:
-      "Shore-based seminar on coral identification, bleaching indicators, and how to report health data on your dives.",
-    difficulty: "All levels",
-  },
-  {
-    title: "Reef Check Survey Dive",
-    type: "Research",
-    date: "2025-05-03",
-    displayDate: "May 3",
-    day: "Sat",
-    time: "7:30 AM",
-    spots: 8,
-    filled: 3,
-    description:
-      "Certified Reef Check survey using standardized transect protocols. Training provided the evening before.",
-    difficulty: "Advanced+",
-  },
-  {
-    title: "Dive Against Debris",
-    type: "Cleanup",
-    date: "2025-05-10",
-    displayDate: "May 10",
-    day: "Sat",
-    time: "8:00 AM",
-    spots: 12,
-    filled: 2,
-    description: "Monthly debris collection and logging at the main reef site. All gear provided.",
-    difficulty: "Open Water+",
-  },
-  {
-    title: "Night Coral Spawn Watch",
-    type: "Research",
-    date: "2025-05-17",
-    displayDate: "May 17",
-    day: "Sat",
-    time: "9:00 PM",
-    spots: 6,
-    filled: 6,
-    description:
-      "Rare opportunity to observe coral spawning in situ. In partnership with CORAL. Fully booked — join the waitlist.",
-    difficulty: "Advanced+",
-  },
-  {
-    title: "Beach & Shore Cleanup",
-    type: "Cleanup",
-    date: "2025-06-07",
-    displayDate: "Jun 7",
-    day: "Sat",
-    time: "9:00 AM",
-    spots: 30,
-    filled: 8,
-    description:
-      "No certification needed. Shoreline cleanup logging debris for Ocean Conservancy's International Coastal Cleanup database.",
-    difficulty: "All levels",
-  },
-];
+const ALL_TAGS = ["All", "Cleanup", "Coral", "Research", "Education", "Policy"];
 
-const ALL_TAGS = ["All", "Coral", "Cleanup", "Research", "Education", "Policy"];
-
-const TYPE_COLORS = {
-  Cleanup: { bg: "bg-teal-900/40", text: "text-teal-300" },
-  Research: { bg: "bg-blue-900/40", text: "text-blue-300" },
-  Education: { bg: "bg-amber-900/40", text: "text-amber-300" },
-  Policy: { bg: "bg-violet-900/40", text: "text-violet-300" },
-  Coral: { bg: "bg-rose-900/40", text: "text-rose-300" },
+const TIER_META: Record<string, { label: string; accent: string; description: string }> = {
+  Beginner: {
+    label: "Beginner",
+    accent: "text-emerald-400",
+    description: "Start here — no experience required.",
+  },
+  Continuing: {
+    label: "Continuing Education",
+    accent: "text-cyan-400",
+    description: "Expand your limits and learn specialized skills.",
+  },
+  Professional: {
+    label: "Professional",
+    accent: "text-indigo-400",
+    description: "Start leading others and turn diving into a career.",
+  },
 };
 
-function TagPill({ tag, active, onClick }) {
+function TagPill({ tag, active, onClick }: { tag: string; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      style={{ fontFamily: "system-ui, sans-serif" }}
-      className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-200 border ${
+      className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-250 border ${
         active
           ? "bg-cyan-400 text-slate-900 border-cyan-400"
-          : "bg-transparent text-slate-400 border-slate-600 hover:border-slate-400 hover:text-slate-200"
+          : "bg-transparent text-slate-400 border-slate-700/60 hover:border-slate-500 hover:text-slate-300"
       }`}
+      style={{ fontFamily: "system-ui, sans-serif" }}
     >
       {tag}
     </button>
   );
 }
 
-function OrgCard({ org }) {
+function OrgCard({ org }: { org: typeof orgs[0] }) {
   return (
-    <div className="group relative bg-slate-800/50 border border-slate-700/60 rounded-2xl p-6 flex flex-col gap-3 hover:border-cyan-500/50 hover:bg-slate-800/80 transition-all duration-300">
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-white font-semibold text-base leading-tight">{org.name}</h3>
-        <span
-          className="text-slate-500 text-[10px] uppercase tracking-widest whitespace-nowrap mt-0.5"
-          style={{ fontFamily: "system-ui, sans-serif" }}
-        >
-          {org.region}
-        </span>
-      </div>
-      <p className="text-cyan-400 text-xs font-medium uppercase tracking-wider" style={{ fontFamily: "system-ui, sans-serif" }}>
-        {org.focus}
-      </p>
-      <p className="text-slate-400 text-sm leading-relaxed" style={{ fontFamily: "system-ui, sans-serif" }}>
-        {org.description}
-      </p>
-      <div className="flex flex-wrap gap-1.5 mt-1">
-        {org.tags.map((t) => {
-          const c = TYPE_COLORS[t] || { bg: "bg-slate-700", text: "text-slate-300" };
-          return (
+    <div className="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-6 flex flex-col justify-between hover:border-cyan-500/20 transition-all duration-300">
+      <div>
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {org.tags.map((t) => (
             <span
               key={t}
-              className={`${c.bg} ${c.text} text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider`}
+              className="text-[9px] font-bold text-cyan-400 bg-cyan-950/40 border border-cyan-500/25 px-2 py-0.5 rounded-full uppercase tracking-wider"
               style={{ fontFamily: "system-ui, sans-serif" }}
             >
               {t}
             </span>
-          );
-        })}
+          ))}
+        </div>
+        <h3 className="text-white font-bold text-lg mb-1">{org.name}</h3>
+        <span
+          className="text-slate-500 text-[10px] uppercase tracking-widest font-semibold block mb-4"
+          style={{ fontFamily: "system-ui, sans-serif" }}
+        >
+          Focus: {org.focus}
+        </span>
+        <p
+          className="text-slate-400 text-sm leading-relaxed mb-6"
+          style={{ fontFamily: "system-ui, sans-serif" }}
+        >
+          {org.description}
+        </p>
       </div>
-      <a
-        href={org.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-auto pt-2 text-xs text-slate-500 hover:text-cyan-400 transition-colors duration-200 flex items-center gap-1.5 group-hover:text-cyan-400"
-        style={{ fontFamily: "system-ui, sans-serif" }}
-      >
-        Visit {org.name.split(" ")[0]}
-        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-        </svg>
-      </a>
+
+      <div className="flex items-center justify-between border-t border-slate-800/80 pt-4 mt-auto">
+        <span className="text-slate-500 text-xs" style={{ fontFamily: "system-ui, sans-serif" }}>
+          📍 {org.region}
+        </span>
+        <a
+          href={org.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-colors"
+          style={{ fontFamily: "system-ui, sans-serif" }}
+        >
+          Website ↗
+        </a>
+      </div>
     </div>
   );
 }
 
-function EventCard({ event, onRegisterSuccess }) {
-  const c = TYPE_COLORS[event.type] || TYPE_COLORS.Cleanup;
-  const isFull = event.filled >= event.spots;
-  const pct = Math.round((event.filled / event.spots) * 100);
-  const monthNum = event.displayDate.split(" ")[1];
-
+function EventCard({
+  event,
+  user,
+  onRegisterSuccess,
+}: {
+  event: any;
+  user: any;
+  onRegisterSuccess: (title: string, date: string) => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [certLevel, setCertLevel] = useState("Open Water");
   const [certNumber, setCertNumber] = useState("");
   const [conductCheck, setConductCheck] = useState(false);
   const [waiverCheck, setWaiverCheck] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      setName(user.name || "");
+      setEmail(user.email || "");
+      setCertNumber(user.padiCertNumber || "");
+      if (user.padiCertLevel) {
+        setCertLevel(user.padiCertLevel.replace("_", " "));
+      }
+    }
+  }, [user]);
+
+  const isFull = event.filled >= event.spots;
+  const pct = Math.min(100, (event.filled / event.spots) * 100);
+
+  const colors = {
+    Cleanup: { bg: "bg-teal-950/40 border-teal-500/25", text: "text-teal-400" },
+    Education: { bg: "bg-amber-950/40 border-amber-500/25", text: "text-amber-400" },
+    Research: { bg: "bg-indigo-950/40 border-indigo-500/25", text: "text-indigo-400" },
+  };
+  const c = colors[event.type as keyof typeof colors] || colors.Cleanup;
+  const monthNum = event.displayDate.split(" ")[1];
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !conductCheck || !waiverCheck) return;
-    
     setLoading(true);
-    setTimeout(() => {
-        setLoading(false);
-        setIsRegistered(true);
-        onRegisterSuccess(event.title, event.date);
-    }, 1200);
+    setError("");
+
+    try {
+      await apiClient.createRsvp({
+        conservation_event_id: event.id,
+        guest_name: name,
+        guest_email: email,
+      });
+
+      setIsRegistered(true);
+      onRegisterSuccess(event.title, event.date);
+    } catch (err: any) {
+      setError(err.message || "Failed to submit RSVP registration.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resetForm = () => {
     setIsOpen(false);
     setIsRegistered(false);
-    setName("");
-    setEmail("");
-    setCertLevel("Open Water");
-    setCertNumber("");
+    setError("");
+    if (!user) {
+      setName("");
+      setEmail("");
+      setCertLevel("Open Water");
+      setCertNumber("");
+    }
     setConductCheck(false);
     setWaiverCheck(false);
   };
@@ -367,6 +337,12 @@ function EventCard({ event, onRegisterSuccess }) {
                 </div>
               ) : (
                 <form onSubmit={handleRegisterSubmit} className="space-y-4 text-left" style={{ fontFamily: "system-ui, sans-serif" }}>
+                  {error && (
+                    <div className="p-3 rounded-lg bg-red-950/20 border border-red-500/20 text-red-400 text-xs">
+                      {error}
+                    </div>
+                  )}
+
                   <div>
                     <label className="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Full Name</label>
                     <input
@@ -375,7 +351,7 @@ function EventCard({ event, onRegisterSuccess }) {
                       onChange={(e) => setName(e.target.value)}
                       required
                       placeholder="Jacques Cousteau"
-                      className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+                      className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none"
                     />
                   </div>
 
@@ -387,7 +363,7 @@ function EventCard({ event, onRegisterSuccess }) {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="jacques@horizon.org"
-                      className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+                      className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none"
                     />
                   </div>
 
@@ -415,7 +391,7 @@ function EventCard({ event, onRegisterSuccess }) {
                         value={certNumber}
                         onChange={(e) => setCertNumber(e.target.value)}
                         placeholder="Optional"
-                        className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+                        className="w-full h-11 px-4 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-cyan-400 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -448,22 +424,17 @@ function EventCard({ event, onRegisterSuccess }) {
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="text-xs font-semibold text-slate-400 hover:text-white px-4 py-2 transition-colors"
+                      className="text-xs font-semibold text-slate-400 hover:text-white px-4 py-2"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={!name.trim() || !email.trim() || !conductCheck || !waiverCheck || loading}
-                      className="bg-cyan-400 text-slate-900 font-bold text-xs px-6 py-2.5 rounded-full hover:bg-cyan-300 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed transition-all duration-200 min-w-[100px] flex items-center justify-center"
+                      className="bg-cyan-400 text-slate-900 font-bold text-xs px-6 py-2.5 rounded-full hover:bg-cyan-300 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed transition-all duration-200 min-w-[100px] flex items-center justify-center gap-1.5"
                     >
-                      {loading ? (
-                        <div className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
-                      ) : isFull ? (
-                        "Join Waitlist"
-                      ) : (
-                        "Confirm"
-                      )}
+                      {loading && <Loader2 className="w-3 h-3 animate-spin text-slate-950" />}
+                      {isFull ? "Join Waitlist" : "Confirm"}
                     </button>
                   </div>
                 </form>
@@ -478,7 +449,53 @@ function EventCard({ event, onRegisterSuccess }) {
 
 export default function ConservationPage() {
   const [activeTag, setActiveTag] = useState("All");
-  const [eventList, setEventList] = useState(events);
+  const [user, setUser] = useState<any>(null);
+  const [eventList, setEventList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch current user and conservation events dynamically from backend
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [u, eventsData] = await Promise.all([
+          apiClient.getCurrentUser(),
+          apiClient.getConservationEvents()
+        ]);
+        
+        setUser(u);
+
+        // Format raw DB events to match client EventCard contracts
+        if (eventsData) {
+          const formatted = eventsData.map((e: any) => {
+            const d = new Date(e.date);
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            
+            return {
+              id: e.id,
+              title: e.title,
+              type: e.eventType === "cleanup" ? "Cleanup" : e.eventType === "restoration" ? "Research" : "Education",
+              date: e.date,
+              displayDate: `${months[d.getMonth()]} ${d.getDate()}`,
+              day: days[d.getDay()],
+              time: "9:00 AM", // default time slot
+              spots: e.capacity,
+              filled: e.capacity - e.spotsRemaining,
+              description: e.description,
+              difficulty: e.eventType === "cleanup" ? "All levels" : "Open Water+"
+            };
+          });
+          setEventList(formatted);
+        }
+      } catch (err) {
+        console.error("Failed to load conservation data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadData();
+  }, []);
 
   const filteredOrgs =
     activeTag === "All" ? orgs : orgs.filter((o) => o.tags.includes(activeTag));
@@ -493,12 +510,16 @@ export default function ConservationPage() {
     );
   };
 
+  const getDistinctMonths = () => {
+    const mSet = new Set(eventList.map(e => e.displayDate.split(" ")[0]));
+    return Array.from(mSet);
+  };
+
   return (
     <div
-      className="min-h-screen text-white"
+      className="min-h-screen text-white bg-slate-950"
       style={{
         background: "linear-gradient(160deg, #020d18 0%, #041824 40%, #020d18 100%)",
-        fontFamily: "'Georgia', 'Times New Roman', serif",
       }}
     >
       {/* Subtle grid overlay */}
@@ -514,7 +535,7 @@ export default function ConservationPage() {
       <div className="relative max-w-6xl mx-auto px-6 py-20">
 
         {/* ── HERO ── */}
-        <div className="mb-20">
+        <div className="mb-20 pt-16">
           <h1
             className="text-5xl md:text-6xl font-bold leading-tight mb-6"
             style={{ letterSpacing: "-0.02em" }}
@@ -570,45 +591,60 @@ export default function ConservationPage() {
             </p>
           </div>
 
-          {["Apr", "May", "Jun"].map((month) => {
-            const monthEvents = eventList.filter((e) => e.displayDate.startsWith(month));
-            if (!monthEvents.length) return null;
-            return (
-              <div key={month} className="mb-10">
-                <div className="flex items-center gap-4 mb-4">
-                  <span
-                    className="text-slate-600 text-xs uppercase tracking-[0.2em] font-semibold"
-                    style={{ fontFamily: "system-ui, sans-serif" }}
-                  >
-                    {month} 2025
-                  </span>
-                  <div className="flex-1 h-px bg-slate-800" />
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+            </div>
+          ) : eventList.length === 0 ? (
+            <p className="text-slate-500 py-6 text-sm" style={{ fontFamily: "system-ui, sans-serif" }}>No events scheduled currently.</p>
+          ) : (
+            getDistinctMonths().map((month) => {
+              const monthEvents = eventList.filter((e) => e.displayDate.startsWith(month));
+              if (!monthEvents.length) return null;
+              return (
+                <div key={month} className="mb-10">
+                  <div className="flex items-center gap-4 mb-4">
+                    <span
+                      className="text-slate-600 text-xs uppercase tracking-[0.2em] font-semibold"
+                      style={{ fontFamily: "system-ui, sans-serif" }}
+                    >
+                      {month} {new Date().getFullYear()}
+                    </span>
+                    <div className="flex-1 h-px bg-slate-800" />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {monthEvents.map((event) => (
+                      <EventCard 
+                        key={event.id} 
+                        event={event} 
+                        user={user}
+                        onRegisterSuccess={handleRegisterSuccess} 
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-col gap-3">
-                  {monthEvents.map((event) => (
-                    <EventCard key={event.title + event.date} event={event} onRegisterSuccess={handleRegisterSuccess} />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
 
           {/* Community CTA */}
           <div className="mt-12 rounded-2xl border border-cyan-500/20 bg-cyan-950/20 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div>
               <h3 className="text-white font-semibold text-lg mb-1">Want to host or suggest an event?</h3>
               <p className="text-slate-400 text-sm" style={{ fontFamily: "system-ui, sans-serif" }}>
-                We're always looking to partner with local orgs, dive clubs, and marine researchers.
+                We're always looking to collaborate with local conservation bodies. Get in touch with us!
               </p>
             </div>
-            <button
+            <a
+              href="mailto:conservation@bluehorizon.com"
               className="shrink-0 bg-cyan-400 text-slate-900 font-semibold text-sm px-6 py-3 rounded-full hover:bg-cyan-300 transition-colors duration-200"
               style={{ fontFamily: "system-ui, sans-serif" }}
             >
-              Get in touch →
-            </button>
+              Contact conservation staff &rarr;
+            </a>
           </div>
         </section>
+
       </div>
     </div>
   );
