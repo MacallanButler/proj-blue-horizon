@@ -26,3 +26,9 @@ dist-ssr
 # Next.js
 .next/
 out/
+
+# Rails secrets
+/backend/config/master.key
+
+# Rails temp
+/backend/tmp/
